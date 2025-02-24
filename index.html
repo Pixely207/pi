@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="1200" height="1200"></canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Center of canvas
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 500;
+        
+        // Draw circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.lineWidth = 1;  // Decreased from 3
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+        
+        // Draw 36-sided polygon
+        ctx.beginPath();
+        ctx.moveTo(centerX + radius * Math.cos(0), centerY + radius * Math.sin(0));
+        
+        for (let i = 1; i <= 36; i++) {
+            const angle = (i * 2 * Math.PI) / 36;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            ctx.lineTo(x, y);
+        }
+        
+        ctx.closePath();
+        ctx.lineWidth = 1.5;  // Decreased from 3
+        ctx.strokeStyle = '#666666';
+        ctx.stroke();
+
+        // Mark center point with just a dot
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = 'blue';
+        ctx.fill();
+    </script>
+</body>
+</html>
