@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="1200" height="1200"></canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Center of canvas
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 250;
+        
+        // Draw circle
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+        
+        // Draw 12-sided polygon
+        ctx.beginPath();
+        ctx.moveTo(centerX + radius * Math.cos(0), centerY + radius * Math.sin(0));
+        
+        // Store vertices for later use
+        const vertices = [];
+        for (let i = 0; i <= 12; i++) {
+            const angle = (i * 2 * Math.PI) / 12;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            vertices.push({x, y});
+            ctx.lineTo(x, y);
+        }
+        
+        ctx.closePath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#666666';
+        ctx.stroke();
+
+        // Draw red dotted lines from center to vertices
+        ctx.setLineDash([2, 2]);
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = 'red';
+        
+        for (let i = 0; i < 12; i++) {
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(vertices[i].x, vertices[i].y);
+            ctx.stroke();
+        }
+
+        // Draw blue dotted lines between red lines, stopping at polygon
+        ctx.strokeStyle = 'blue';
+        for (let i = 0; i < 12; i++) {
+            const angle1 = (i * 2 * Math.PI) / 12;
+            const angle2 = ((i + 1) * 2 * Math.PI) / 12;
+            const midAngle = (angle1 + angle2) / 2;
+            
+            // Calculate intersection point with polygon
+            // For a regular polygon, this is radius * cos(30°)
+            const innerRadius = radius * Math.cos(Math.PI / 12);
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(
+                centerX + innerRadius * Math.cos(midAngle),
+                centerY + innerRadius * Math.sin(midAngle)
+            );
+            ctx.stroke();
+        }
+
+        // Mark center point with just a dot
+        ctx.setLineDash([]); // Reset to solid line
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = 'blue';
+        ctx.fill();
+    </script>
+</body>
+</html>
